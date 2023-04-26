@@ -11,8 +11,27 @@ Select your desired actions:
    [ ] reboot
 ```
 
-A common use case are installer scripts, where you have a procedure of executing functions and you want to allow the user to pick a subset.  
+or by using the `-r` (radio) flag:
+
+```txt
+Pick your choice:
+(Use [Arrows] to navigate, [Enter] to proceed)
+
+    yes
+➜  no
+    maybe
+```
+
+A common use case are:
+
+- installer scripts, where you have a procedure of executing functions and you want to allow the user to pick a subset
+- allow the user to pick an option from the list of options (`-r` *radio* option flag)
+
+### Return
+
 Returns a public `selection` **array** with a filtered set of names in their original order.
+Returns a public `selection` **string** with the selected item name (when using the `-r` option flag)
+
 
 ### Usage
 
