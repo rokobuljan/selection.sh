@@ -107,7 +107,7 @@ main() {
     while getopts ":rt:" opt; do
         case $opt in
             h)
-                echo "Usage: source $0 [-h] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ..."
+                echo "Usage: source $0 [-h] [-r] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ..."
                 exit 0
                 ;;
             r)
