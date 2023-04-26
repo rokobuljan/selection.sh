@@ -20,7 +20,7 @@ inArray() {
 }
 
 draw() {
-    # Clear che terminal
+    # Clear the terminal
     clear
 
     title="${title:-"Select the desired options:"}"
