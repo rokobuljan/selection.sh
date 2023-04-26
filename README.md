@@ -3,7 +3,7 @@ Create a terminal navigable checkbox list
 
 ```txt
 Select your desired actions:
-([ArrowUp/Down] to navigate, [Space] to toggle, [Enter] to proceed)
+(Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
 
    [ ] say_hi
    [■] say_hello
