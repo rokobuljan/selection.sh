@@ -26,7 +26,7 @@ draw() {
     title="${title:-"Select the desired options:"}"
     local outNavInfo=""
     if [[ $_selection_tot -gt 0 ]]; then
-        outNavInfo="[ArrowUp/Down] to navigate, [Space] to toggle, "
+        outNavInfo="Use [Arrows] to navigate, [Space] to toggle, "
     fi
     local out="$title\n($outNavInfo[Enter] to proceed)\n\n"
 
