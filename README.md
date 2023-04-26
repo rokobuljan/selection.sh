@@ -12,7 +12,7 @@ Select your desired actions:
 ```
 
 A common use case are installer scripts, where you have a procedure of executing functions and you want to allow the user to pick a subset.  
-Returns a filtered array of the original set of names.
+Returns a public `selection` **array** with a filtered set of names in their original order.
 
 ### Usage
 
