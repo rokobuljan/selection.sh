@@ -177,7 +177,7 @@ main "$@"
 watchKeys
 output
 
-# Clear public variables
+# Clear private variables
 unset _selection_items
 unset _selection_active
 unset _selection_tot
