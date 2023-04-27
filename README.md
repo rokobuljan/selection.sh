@@ -9,7 +9,7 @@ Create a CLI selection menu or checkbox list
 To create a menu with options:
 
 ```sh
-source ./selection.sh Yes No "Maybe tomorrow"
+source ./selection.sh Yes No "Remind me later"
 echo "$selection"
 ```
 
