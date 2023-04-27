@@ -76,7 +76,7 @@ draw() {
 
         # CHECKBOXES
         if [[ "$_isMultiple" == true ]]; then
-            if inArray $i "${_selection_active[@]}"; then
+            if inArray "$i" "${_selection_active[@]}"; then
                 out+="$ckbOn"
             else
                 out+="$ckbOff"
@@ -104,7 +104,7 @@ moveUp() {
 
 moveDown() {
     ((_selection_cursor+=1))
-    if [[ $_selection_cursor -ge $_selection_tot ]]; then
+    if [[ "$_selection_cursor" -ge "$_selection_tot" ]]; then
         _selection_cursor=0
     fi
     draw
@@ -112,13 +112,19 @@ moveDown() {
 
 toggle() {
     if [[ "$_isMultiple" == true ]]; then
-        if inArray $_selection_cursor "${_selection_active[@]}"; then
-            _selection_active=("${_selection_active[@]/$_selection_cursor}")
+        if inArray "$_selection_cursor" "${_selection_active[@]}"; then
+            # Remove item index from array
+            local i=0
+            for i in "${!_selection_active[@]}"; do
+                if [[ "${_selection_active[i]}" == "$_selection_cursor" ]]; then
+                    unset "_selection_active[i]"
+                fi
+            done
         else
+            # Insert selected item index
             _selection_active+=($_selection_cursor)
         fi
-        _selection_active=($(printf "%s\n" "${_selection_active[@]}")) 
-        draw  
+        draw
     fi 
 }
 
@@ -129,7 +135,7 @@ main() {
     _selection_cursor=0
 
     while getopts ":hamit:" opt; do
-        case $opt in
+        case "$opt" in
             h)
                 usage 
                 ;;
