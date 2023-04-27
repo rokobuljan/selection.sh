@@ -129,11 +129,7 @@ toggle() {
 }
 
 main() {
-    _selection_items=()
-    _selection_active=()
-    _selection_tot=0
-    _selection_cursor=0
-
+    local _isDefaultChecked=false
     while getopts ":hcmit:" opt; do
         case "$opt" in
             h)
