@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Create selections checkboxes in CLI
+# https://github.com/rokobuljan/selection.sh
 # Author: Roko C. Buljan
 
 set -euo pipefail
@@ -62,7 +63,7 @@ draw() {
 
     local out="$_selection_title\n($outNavInfo[Enter] to proceed)\n\n"
 
-    local arrow="\e[32m➜\e[0m" # arrow cursor
+    local arrow="\e[32m>\e[0m" # arrow cursor
     local ckbOn="[\e[32m■\e[0m]" # checked
     local ckbOff="[\e[31m \e[0m]" # unchecked ✕
     local -i i=0
@@ -71,9 +72,9 @@ draw() {
 
         # ARROW
         if [[ "${i}" -eq "${_selection_cursor}" ]]; then
-            out+="$arrow  "
+            out+="$arrow "
         else
-            out+="   "
+            out+="  "
         fi
 
         # CHECKBOXES

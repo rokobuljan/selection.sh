@@ -19,9 +19,9 @@ outputs:
 Select an option:
 (Use [Arrows] to navigate, [Enter] to proceed)
 
-➜  Yes
-    No
-    Remind me later
+>  Yes
+   No
+   Remind me later
 ```
 
 `$selection` returns the name string (i.e: *"Remind me later"*).  
@@ -50,9 +50,9 @@ outputs:
 Select the desired options:
 (Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
 
-➜ [■] Install packages
-   [■] Subscribe
-   [ ] Reboot
+> [■] Install packages
+  [■] Subscribe
+  [ ] Reboot
 ```
 
 `$selection` returns the names Array of the checked options (i.e: *("Install packages" "Subscribe")*).  
