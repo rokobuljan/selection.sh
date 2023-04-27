@@ -1,73 +1,93 @@
 # selection.sh
-Create a terminal navigable checkbox list
 
-```txt
-Select your desired actions:
-(Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
+Create a CLI selection menu or checkbox list
 
-   [ ] say_hi
-   [■] say_hello
-➜ [■] sing
-   [ ] reboot
+## Examples
+
+### Menu
+
+To create a menu with options:
+
+```sh
+source ./selection.sh Yes No "Maybe tomorrow"
+echo "$selection"
 ```
 
-or by using the `-r` (radio) flag:
+outputs:
 
-```txt
-Pick your choice:
+```sh
+Select an option:
 (Use [Arrows] to navigate, [Enter] to proceed)
 
-    yes
-➜  no
-    maybe
+➜  Yes
+    No
+    Remind me later
 ```
 
-A common use case are:
+`$selection` returns the name string (i.e: *"Remind me later"*).  
+To return the index instead, use the `-i` flag.
 
-- installer scripts, where you have a procedure of executing functions and you want to allow the user to pick a subset
-- allow the user to pick an option from the list of options (`-r` *radio* option flag)
+### Multiple selection (checkboxes)
 
-### Return
+Create a menu with a list of cehckboxes. The checkboxes are unchecked by default.  
+Use the `:1` suffix to make the option checked. Use (optionally) `:0` to make it unchecked.
 
-Returns a public `selection` **array** with a filtered set of names in their original order.
-Returns a public `selection` **string** with the selected item name (when using the `-r` option flag)
-
-
-### Usage
-
-For usage help see: `./selection.sh -h`
-
-<sub>index.sh</sub>
 ```sh
-#!/bin/bash
-
-say_hi() {
-    echo "Hi!!!!"
-}
-
-say_hello() {
-    echo "Hello, world!"
-}
-
-sing() {
-    echo "La, la-la la!"
-}
-
-reboot() {
-    echo "Rebooting..."
-}
-
-# Prompt selections:
-source ./selection.sh -t "Select your desired actions:" say_hi:1 say_hello:1 sing:0 reboot
-
+source ./selection.sh -m "Install packages:1" "Subscribe:1" "Reboot"
 for arg in "${selection[@]}"; do
-    # Trigger function:
-    "$arg"
+    echo "$arg"
 done
 ```
 
-as you can see, both using `someName:0` or `sameName` will make the ckeckbox unchecked by default.  
-To make a checkbox default checked use always the `:1` suffix.
+outputs:
+
+```txt
+Select the desired options:
+(Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
+
+➜ [■] Install packages
+   [■] Subscribe
+   [ ] Reboot
+```
+
+`$selection` returns the names Array of the checked options (i.e: *("Install packages" "Subscribe")*).  
+To return the indexes instead, use the `-i` flag.
+
+### Custom title
+
+To customise the title use the `-t` option like i.e:
+
+```sh
+source ./selection.sh -i -t "Welcome.\nSelect an action:" "Reboot server" "Cleanup" "Review logs"
+# echo "$selection"
+```
+
+___
+
+Tip:  
+Run functions depending on a selection:  
+
+```sh
+#!/bin/bash
+
+fn_0() {
+    echo "Rebooting server..."
+}
+
+fn_1() {
+    echo "Cleanup in process..."
+}
+
+fn_2() {
+    echo "Log files sent to your inbox."
+}
+
+# Prompt selections:
+source ./selection.sh -i -m -t "Welcome $USER.\nSelect some actions:" "Reboot server" Cleanup "Review logs"
+for i in "${selection[@]}"; do
+    "fn_$i" # Trigger function/s:
+done
+```
 
 ### Licence
 

@@ -11,7 +11,27 @@ declare -a _selection_items=()
 declare -a _selection_active=()
 declare -i _selection_tot=0
 declare -i _selection_cursor=0
-_isRadio=false
+_isMultiple=false
+_isOutputIndex=false
+
+usage() {
+    echo -e "Usage:
+    source $0 [-m] [-i] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ...
+Options:
+    -m Multiple (checkboxes)
+    -i Output index instead of names
+    -t Title 
+    -h Help
+Examples:
+    source $0 Yes No \"Maybe tomorrow\"
+    source $0 -t \"Select one:\" \"Yes\" \"No\" \"Maybe\"  # Returns name 
+    source $0 -i -t \"Select one:\" \"Yes\" \"No\" \"Maybe\"  # Returns index
+    source $0 -m -t \"Select multiple:\" \"Load:1\" \"Configure:0\" \"Reboot\"  # Returns names
+    source $0 -i -m -t \"Select multiple:\" \"Load:1\" \"Configure:0\" \"Reboot\"  # Returns indexes
+
+"
+    exit 0
+}
 
 inArray() {
     local val
@@ -23,19 +43,24 @@ draw() {
     # Clear the terminal
     clear
 
-    _selection_title="${_selection_title:-"Select the desired options:"}"
+    if [[ "$_isMultiple" == true ]]; then
+        _selection_title="${_selection_title:-"Select the desired options:"}"
+    else
+        _selection_title="${_selection_title:-"Select an option:"}"
+    fi
+
     local outNavInfo="Use "
     if [[ "$_selection_tot" -gt 0 ]]; then
         outNavInfo+="[Arrows] to navigate, "
     fi
 
-    if [[ "$_isRadio" == false ]]; then
+    if [[ "$_isMultiple" == true ]]; then
         outNavInfo+="[Space] to toggle, "
     fi
 
     local out="$_selection_title\n($outNavInfo[Enter] to proceed)\n\n"
 
-    local arrow="\e[33m➜\e[0m" # arrow cursor
+    local arrow="\e[32m➜\e[0m" # arrow cursor
     local ckbOn="[\e[32m■\e[0m]" # checked
     local ckbOff="[\e[31m \e[0m]" # unchecked ✕
     local -i i=0
@@ -50,7 +75,7 @@ draw() {
         fi
 
         # CHECKBOXES
-        if [[ "$_isRadio" == false ]]; then
+        if [[ "$_isMultiple" == true ]]; then
             if inArray $i "${_selection_active[@]}"; then
                 out+="$ckbOn"
             else
@@ -60,7 +85,7 @@ draw() {
 
         # ITEM NAME
         if [[ "${i}" -eq "${_selection_cursor}" ]]; then
-            out+=" \e[33m${_selection_items[$i]}\e[0m\n"
+            out+=" \e[32m${_selection_items[$i]}\e[0m\n"
         else
             out+=" ${_selection_items[$i]}\n"
         fi
@@ -86,16 +111,15 @@ moveDown() {
 }
 
 toggle() {
-
-    [[ "$_isRadio" == true ]] && return 0
-
-    if inArray $_selection_cursor "${_selection_active[@]}"; then
-        _selection_active=("${_selection_active[@]/$_selection_cursor}")
-    else
-        _selection_active+=($_selection_cursor)
-    fi
-    _selection_active=($(printf "%s\n" "${_selection_active[@]}")) 
-    draw   
+    if [[ "$_isMultiple" == true ]]; then
+        if inArray $_selection_cursor "${_selection_active[@]}"; then
+            _selection_active=("${_selection_active[@]/$_selection_cursor}")
+        else
+            _selection_active+=($_selection_cursor)
+        fi
+        _selection_active=($(printf "%s\n" "${_selection_active[@]}")) 
+        draw  
+    fi 
 }
 
 main() {
@@ -104,14 +128,16 @@ main() {
     _selection_tot=0
     _selection_cursor=0
 
-    while getopts ":rt:" opt; do
+    while getopts ":hmit:" opt; do
         case $opt in
             h)
-                echo "Usage: source $0 [-h] [-r] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ..."
-                exit 0
+                usage 
                 ;;
-            r)
-                _isRadio=true
+            m)
+                _isMultiple=true
+                ;;
+            i)
+                _isOutputIndex=true
                 ;;
             t)
                 _selection_title="$OPTARG"
@@ -172,7 +198,7 @@ watchKeys() {
                 esac
                 ;;
             $' ') # space
-                [[ "$_isRadio" == false ]] && toggle || { clear; break; }
+                [[ "$_isMultiple" == true ]] && toggle || { clear; break; }
                 ;;
             $'\n') # enter/return
                 clear
@@ -185,15 +211,23 @@ watchKeys() {
 output() {
     # Collect selected items by active indexes
     # Export selections array in the original order
-    if [[ "$_isRadio" == true ]]; then
-        selection="${_selection_items[$_selection_cursor]}"
-    else
+    if [[ "$_isMultiple" == true ]]; then
         local -i idx
         for idx in "${!_selection_items[@]}"; do
             if inArray "$idx" "${_selection_active[@]}"; then
-                selection+=("${_selection_items[$idx]}")
+                if [[ "$_isOutputIndex" == true ]]; then
+                    selection+=("$idx")
+                else
+                    selection+=("${_selection_items[$idx]}")
+                fi
             fi
         done
+    else
+        if [[ "$_isOutputIndex" == true ]]; then
+            selection="$_selection_cursor"
+        else
+            selection="${_selection_items[$_selection_cursor]}"
+        fi
     fi
 }
 
@@ -208,6 +242,7 @@ unset _selection_items
 unset _selection_active
 unset _selection_tot
 unset _selection_cursor
-unset _isRadio
+unset _isMultiple
+unset _isOutputIndex
 # Notice:
 # selection array is passed through!
