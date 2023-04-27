@@ -2,9 +2,9 @@
 
 Create a CLI selection menu or checkbox list
 
-## Examples
 
-### Menu
+
+## Single selection
 
 To create a menu with options:
 
@@ -15,19 +15,19 @@ echo "$selection"
 
 outputs:
 
-```sh
-Select an option:
-(Use [Arrows] to navigate, [Enter] to proceed)
+> ```txt
+> Select an option:
+> (Use [Arrows] to navigate, [Enter] to proceed)
+> 
+> > Yes
+>   No
+>   Remind me later
+> ```
 
->  Yes
-   No
-   Remind me later
-```
+`$selection` returns the name string i.e: `Remind me later`.  
+To return the index instead, use the `-i` flag. Such will give you i.e: `2` instead of `Remind me later`
 
-`$selection` returns the name string (i.e: *"Remind me later"*).  
-To return the index instead, use the `-i` flag.
-
-### Multiple selection (checkboxes)
+## Multiple selection (checkboxes)
 
 Create a menu with a list of checkboxes.  
 
@@ -46,14 +46,14 @@ done
 
 outputs:
 
-```txt
-Select the desired options:
-(Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
-
-> [■] Install packages
-  [■] Subscribe
-  [ ] Reboot
-```
+> ```txt
+> Select the desired options:
+> (Use [Arrows] to navigate, [Space] to toggle, [Enter] to proceed)
+> 
+> > [■] Install packages
+>   [■] Subscribe
+>   [ ] Reboot
+> ```
 
 `$selection` returns the names Array of the checked options (i.e: *("Install packages" "Subscribe")*).  
 To return the indexes instead, use the `-i` flag.
