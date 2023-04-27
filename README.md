@@ -64,7 +64,7 @@ To customise the title use the `-t` option like i.e:
 
 ```sh
 source ./selection.sh -i -t "Welcome.\nSelect an action:" "Reboot server" "Cleanup" "Review logs"
-# echo "$selection"
+echo "$selection"  # The selected index
 ```
 
 ___
