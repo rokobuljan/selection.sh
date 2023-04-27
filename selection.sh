@@ -19,7 +19,7 @@ usage() {
     source $0 [-m -a] [-i] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ...
 Options:
     -m Multiple (checkboxes)
-    -a Multiple All checked by default
+    -c Inverse checked default logic
     -i Output index instead of names
     -t Title 
     -h Help
@@ -134,7 +134,7 @@ main() {
     _selection_tot=0
     _selection_cursor=0
 
-    while getopts ":hamit:" opt; do
+    while getopts ":hcmit:" opt; do
         case "$opt" in
             h)
                 usage 
@@ -142,8 +142,8 @@ main() {
             m)
                 _isMultiple=true
                 ;;
-            a)
-                _isAllChecked=true
+            c)
+                _isDefaultChecked=true
                 ;;
             i)
                 _isOutputIndex=true
@@ -172,13 +172,14 @@ main() {
     for i in "${!args[@]}"; do
         arg="${args[$i]}"
         IFS=':' read -r name ckd <<<"$arg"
-        # Make unchecked by default
-        local checked
-        if [[ "$_isAllChecked" == true ]]; then
-            checked="1"
-        else
-            checked="${ckd:-"0"}"
+
+        # Make unchecked by default, or otherwise
+        local ckdDefault="0"
+        if [[ "$_isDefaultChecked" == true ]]; then
+            ckdDefault="1"
         fi
+
+        local checked="${ckd:-"$ckdDefault"}"
         # Populate items names
         _selection_items+=("$name")
         # Populate checked indexes
