@@ -3,6 +3,8 @@
 # Create selections checkboxes in CLI
 # Author: Roko C. Buljan
 
+set -euo pipefail
+
 # PUBLIC
 declare -a selection=()
 
@@ -130,7 +132,7 @@ toggle() {
 
 main() {
     local _isDefaultChecked=false
-    while getopts ":hcmit:" opt; do
+    while getopts ":hmcit:" opt; do
         case "$opt" in
             h)
                 usage 
@@ -175,7 +177,7 @@ main() {
             ckdDefault="1"
         fi
 
-        local checked="${ckd:-"$ckdDefault"}"
+        local checked="${ckd:-$ckdDefault}"
         # Populate items names
         _selection_items+=("$name")
         # Populate checked indexes
