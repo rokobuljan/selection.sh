@@ -29,8 +29,9 @@ To return the index instead, use the `-i` flag.
 
 ### Multiple selection (checkboxes)
 
-Create a menu with a list of cehckboxes. The checkboxes are unchecked by default.  
-Use the `:1` suffix to make the option checked. Use (optionally) `:0` to make it unchecked.
+Create a menu with a list of cehckboxes. The checkboxes are unchecked by default unless you use the `-a` *"all checked"* flag.  
+Use the `:1` **suffix** to make the option checked. Use (optionally) `:0` to make it unchecked.  
+PS: the *checked* suffixes will be ignored if you use the `-a` flag option.
 
 ```sh
 source ./selection.sh -m "Install packages:1" "Subscribe:1" "Reboot"

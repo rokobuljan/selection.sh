@@ -16,9 +16,10 @@ _isOutputIndex=false
 
 usage() {
     echo -e "Usage:
-    source $0 [-m] [-i] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ...
+    source $0 [-m -a] [-i] [-t title] \"a_checked:1\" \"b_unchecked:0\" \"c_unchecked\" ...
 Options:
     -m Multiple (checkboxes)
+    -a Multiple All checked by default
     -i Output index instead of names
     -t Title 
     -h Help
@@ -28,7 +29,6 @@ Examples:
     source $0 -i -t \"Select one:\" \"Yes\" \"No\" \"Maybe\"  # Returns index
     source $0 -m -t \"Select multiple:\" \"Load:1\" \"Configure:0\" \"Reboot\"  # Returns names
     source $0 -i -m -t \"Select multiple:\" \"Load:1\" \"Configure:0\" \"Reboot\"  # Returns indexes
-
 "
     exit 0
 }
@@ -128,13 +128,16 @@ main() {
     _selection_tot=0
     _selection_cursor=0
 
-    while getopts ":hmit:" opt; do
+    while getopts ":hamit:" opt; do
         case $opt in
             h)
                 usage 
                 ;;
             m)
                 _isMultiple=true
+                ;;
+            a)
+                _isAllChecked=true
                 ;;
             i)
                 _isOutputIndex=true
@@ -164,7 +167,12 @@ main() {
         arg="${args[$i]}"
         IFS=':' read -r name ckd <<<"$arg"
         # Make unchecked by default
-        local checked="${ckd:-"0"}"
+        local checked
+        if [[ "$_isAllChecked" == true ]]; then
+            checked="1"
+        else
+            checked="${ckd:-"0"}"
+        fi
         # Populate items names
         _selection_items+=("$name")
         # Populate checked indexes
