@@ -95,15 +95,15 @@ draw() {
 }
 
 moveUp() {
-    ((_selection_cursor-=1))
-    if [[ $_selection_cursor -lt 0 ]]; then
-        _selection_cursor=$(($_selection_tot-1))
+    _selection_cursor=$((_selection_cursor - 1))
+    if [[ "$_selection_cursor" -lt 0 ]]; then
+        _selection_cursor=$((_selection_tot-1))
     fi
     draw
 }
 
 moveDown() {
-    ((_selection_cursor+=1))
+    _selection_cursor=$((_selection_cursor + 1))
     if [[ "$_selection_cursor" -ge "$_selection_tot" ]]; then
         _selection_cursor=0
     fi
