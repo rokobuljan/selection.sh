@@ -63,9 +63,9 @@ draw() {
 
     local out="$_selection_title\n($outNavInfo[Enter] to proceed)\n\n"
 
-    local arrow="\e[32m>\e[0m" # arrow cursor
-    local ckbOn="[\e[32m■\e[0m]" # checked
-    local ckbOff="[\e[31m \e[0m]" # unchecked ✕
+    local arrow="\e[32m›\e[0m" # arrow cursor
+    local ckbOn="\e[32m☑\e[0m" # checked
+    local ckbOff="☐" # unchecked
     local -i i=0
 
     for (( i=0; i<$_selection_tot; i++ )); do  
@@ -80,9 +80,9 @@ draw() {
         # CHECKBOXES
         if [[ "$_isMultiple" == true ]]; then
             if inArray "$i" "${_selection_active[@]}"; then
-                out+="$ckbOn"
+                out+="$ckbOn "
             else
-                out+="$ckbOff"
+                out+="$ckbOff "
             fi
         fi
 
